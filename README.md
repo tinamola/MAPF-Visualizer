@@ -7,7 +7,7 @@ This is part of a university research project in developing an explanation gener
 - Gange, G. (2018). geas. Bitbucket. https://bitbucket.org/gkgange/geas/src/master/
 
 ## Software Tools
-- [Lazy CBS](https://bitbucket.org/gkgange/lazycbs/src/master/) is the backend path generating engine, written by one of my project supervisors, Graeme Gange.
+- [PathFinder](https://bitbucket.org/gkgange/lazycbs/src/master/) is the backend path generating engine, written by one of my project supervisors, Graeme Gange.
 - We used [pybind11](https://pybind11.readthedocs.io/en/stable/) in order to connect the Lazy CBS code written in C++ to be called from the GUI's python code.
 - The MAPF interface is built using [python's tkinter GUI package](https://docs.python.org/3/library/tkinter.html).
 
