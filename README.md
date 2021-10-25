@@ -29,8 +29,8 @@ This is part of a university research project in developing an explanation gener
   - (Available only in linux) Ask questions(More Functions->Ask Questions)
   - some examples
 -
-|  		 question    | Agent| loc1(optional)|  loc2(optional)   |  time(optional)  |   cost(optional)  |
-| :---        |    :----:   |     :----:   |    :----:   |    :----:   |   ---: |
-|     If there exist a new path for agent 1 to have a time cost of 7 ? 	    |               |           |           |     7        | 1 |  
+|  		 Question    | Agent| loc1(optional)|  loc2(optional)   |  time(optional)  |   cost(optional)  |
+| :---             |    :----:   |     :----:   |    :----:   |    :----:   |   ---: |
+|     If there exist a new path for agent 1 to have a time cost of 7 ? 	   |               |           |           |     7        | 1 |  
 |     What's the new path if agent 0 must not be at location (3,4) ?   |        3,4      |                 |        -1(forbid)          |           | 0|  
-|     What's the new path if agent 1 must travel through (3,4) and (3,5) ?	    |        3,4     |     3,5          |           |       |  1 |   
+|     What's the new path if agent 1 must travel through (3,4) and (3,5) ?	   |        3,4     |     3,5          |           |       |  1 |   
