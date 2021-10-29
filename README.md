@@ -7,7 +7,7 @@ This is part of a university research project in developing an explanation gener
 - Gange, G. (2018). geas. Bitbucket. https://bitbucket.org/gkgange/geas/src/master/
 
 ## Software Tools
-- [PathFinder](https://bitbucket.org/gkgange/lazycbs/src/master/) is the backend path generating engine, written by one of my project supervisors, Graeme Gange.
+- [The backend PathFinder](https://bitbucket.org/gkgange/lazycbs/src/master/) is written by one of my project supervisors, Graeme Gange.
 - We used [pybind11](https://pybind11.readthedocs.io/en/stable/) in order to connect the Lazy CBS code written in C++ to be called from the GUI's python code.
 - The MAPF interface is built using [python's tkinter GUI package](https://docs.python.org/3/library/tkinter.html).
 
@@ -16,9 +16,9 @@ This is part of a university research project in developing an explanation gener
 - The map files from MovingAI have to be converted to .ecbs files using [this script](https://bitbucket.org/gkgange/lazycbs/src/master/scripts/map-conv.py).
 
 ## Run the program
-- Generate the mapf solution by downloading [the lazycbs codebase](https://github.com/AppleGamer22/FIT2082) and following the instructions to run the code, then save the output to [agentsFile.txt].
-- In linux： python3 run.py [agentsFile.txt] [mapFile.ecbs] [agent number]
-- In Python:   python run.py [agentsFile.txt] [mapFile.ecbs] [agent number] or double click run.py
+- Generate the mapf solution by downloading [the lazycbs codebase](https://github.com/AppleGamer22/FIT2082) then save the output to [solution_name.txt] tobe passed to the front-end GUI along with the map and number of agents.
+- In linux： python3 run.py [solution_name.txt] [map_name.ecbs] [agent number]
+- In Python:   python run.py [solution_name.txt] [map_name.ecbs] [agent number] or double click run.py
 
 ### Functions
   - Play/pause the agents
