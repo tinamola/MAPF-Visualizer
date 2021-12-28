@@ -8,11 +8,45 @@ import time
 class MyCanvas(Canvas):
     def __init__(self,parent,**kwargs):
         Canvas.__init__(self,parent,**kwargs)
+
+        """enable user to drag the scene"""
+        # self.canvas = canvas
+        self.xsb = Scrollbar(self, orient="horizontal", command=self.xview)
+        self.ysb = Scrollbar(self, orient="vertical", command=self.yview)
+        self.configure(yscrollcommand=self.ysb.set, xscrollcommand=self.xsb.set)
+        self.configure(scrollregion=(0,0,4000,2000))
+
+        self.bind("<ButtonPress-1>", self.move_start)
+        self.bind("<B1-Motion>", self.move_move)
+        #linux scroll
+        self.bind("<Button-4>", self.zoomerP)
+        self.bind("<Button-5>", self.zoomerM)
+        #windows scroll
+        self.bind("<MouseWheel>",self.zoomer)
+        """"""
+    """drag function"""
+    def move_start(self, event):
+        self.scan_mark(event.x, event.y)
+    def move_move(self, event):
+        self.scan_dragto(event.x, event.y, gain=1)
+    def zoomer(self,event):
+        if (event.delta > 0):
+            self.scale("all", event.x, event.y, 1.1, 1.1)
+        elif (event.delta < 0):
+            self.scale("all", event.x, event.y, 0.9, 0.9)
+        self.configure(scrollregion = self.bbox("all"))
+    def zoomerP(self,event):
+        self.scale("all", event.x, event.y, 1.1, 1.1)
+        self.configure(scrollregion = self.bbox("all"))
+    def zoomerM(self,event):
+        self.scale("all", event.x, event.y, 0.9, 0.9)
+        self.configure(scrollregion = self.bbox("all"))
+    """"""
 """button on the right hand side"""
-class myFrame2(Frame):
+class righthandFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.playButton = Button(self, text='Pause',width=10,height=3, bg='red', fg='black', command=self.play_visualizer)
+        self.playButton = Button(self, text='Pause',width=10,height=3, bg='red', fg='black', command=self.playVisualizer)
         self.playButton.grid(row=1, column=0,columnspan=2,pady=10)
         self.backButton = Button(self, text='<<',width=5,height=3, bg='white', fg='black', command=self.backward)
         self.backButton.grid(row=4, column=0,pady=10)
@@ -24,12 +58,12 @@ class myFrame2(Frame):
         self.speedDownButton.grid(row=5, column=1,pady=10)
 
 
-    """speed up or down"""
+    """change agent's speed"""
     def speedChange(self,change):
         global speedup
         speedup=max(0.001,speedup+change)
     """"""
-    def play_visualizer(self):
+    def playVisualizer(self):
         global continuePlay,Paused
         if self.playButton["text"] == "Pause":
             self.playButton["text"] = "Play"
@@ -58,25 +92,9 @@ class myFrame2(Frame):
         continuePlay=False
 
 """text bar and menu to create new window and new frame inside"""
-class myFrame(Frame):
+class topFrame(Frame):
     def __init__(self, master,canvas):
         Frame.__init__(self, master)
-
-        """enable user to drag the scene"""
-        self.canvas = canvas
-        self.xsb = Scrollbar(self, orient="horizontal", command=self.canvas.xview)
-        self.ysb = Scrollbar(self, orient="vertical", command=self.canvas.yview)
-        self.canvas.configure(yscrollcommand=self.ysb.set, xscrollcommand=self.xsb.set)
-        self.canvas.configure(scrollregion=(0,0,4000,2000))
-
-        self.canvas.bind("<ButtonPress-1>", self.move_start)
-        self.canvas.bind("<B1-Motion>", self.move_move)
-        #linux scroll
-        self.canvas.bind("<Button-4>", self.zoomerP)
-        self.canvas.bind("<Button-5>", self.zoomerM)
-        #windows scroll
-        self.canvas.bind("<MouseWheel>",self.zoomer)
-        """"""
 
         """add menu to root"""
         self.master = master
@@ -84,8 +102,8 @@ class myFrame(Frame):
         self.master.config(menu=menu)
 
         fileMenu = Menu(menu)
-        fileMenu.add_command(label="Agent Detail",command=self.openNewWindow1)
-        fileMenu.add_command(label="Ask Questions",command=self.openNewWindow2)
+        fileMenu.add_command(label="Agent Detail",command=self.agentDetailWindow)
+        fileMenu.add_command(label="Ask Questions",command=self.askQuestionWindow)
         menu.add_cascade(label="More Functions", menu=fileMenu)
         """"""
 
@@ -100,36 +118,18 @@ class myFrame(Frame):
         self.text.tag_config('current', background="#EBEBE4", foreground="black",font=("Helvetica",28))
         self.text.tag_config('normal', foreground="black",font=("Helvetica",14))
         """"""
-        self.newWindow1=None
-        self.newWindow2=None
-    """drag function"""
-    def move_start(self, event):
-        self.canvas.scan_mark(event.x, event.y)
-    def move_move(self, event):
-        self.canvas.scan_dragto(event.x, event.y, gain=1)
-    def zoomer(self,event):
-        if (event.delta > 0):
-            self.canvas.scale("all", event.x, event.y, 1.1, 1.1)
-        elif (event.delta < 0):
-            self.canvas.scale("all", event.x, event.y, 0.9, 0.9)
-        self.canvas.configure(scrollregion = self.canvas.bbox("all"))
-    def zoomerP(self,event):
-        self.canvas.scale("all", event.x, event.y, 1.1, 1.1)
-        self.canvas.configure(scrollregion = self.canvas.bbox("all"))
-    def zoomerM(self,event):
-        self.canvas.scale("all", event.x, event.y, 0.9, 0.9)
-        self.canvas.configure(scrollregion = self.canvas.bbox("all"))
-    """"""
+        self.agentDetailWindow=None
+        self.askQuestionWindow=None
 
     """open new window to display the Agent Detail"""
-    def openNewWindow1(self):
-        if (self.newWindow1==None):
-            self.newWindow1 = Toplevel(root)
-            self.newWindow1.title("Inspect AI")
-            self.newWindow1.geometry("650x700")
-            self.newWindow1.protocol("WM_DELETE_WINDOW", exit)
+    def agentDetailWindow(self):
+        if (self.agentDetailWindow==None):
+            self.agentDetailWindow = Toplevel(root)
+            self.agentDetailWindow.title("Inspect AI")
+            self.agentDetailWindow.geometry("650x700")
+            self.agentDetailWindow.protocol("WM_DELETE_WINDOW", exit)
 
-            self.newframe = Frame(self.newWindow1)
+            self.newframe = Frame(self.agentDetailWindow)
             self.newframe.place(x=10, y=20)
 
             self.t = Text(self.newframe, width=60)
@@ -146,25 +146,25 @@ class myFrame(Frame):
             self.printButton = Button(self.newframe, text = "inspect",
                                       command = lambda: Info.displayAIDetail(the_canvas, self.inputtxt, self.t))
             self.printButton.pack()
-            self.exitButton = Button(self.newframe, text="Exit", highlightbackground="#56B426", command=self.destroy1)
+            self.exitButton = Button(self.newframe, text="Exit", highlightbackground="#56B426", command=self.agentDetailDestroy)
             self.exitButton.pack()
-    def destroy1(self):
-        tw = self.newWindow1
-        self.newWindow1 = None
+    def agentDetailDestroy(self):
+        tw = self.agentDetailWindow
+        self.agentDetailWindow = None
         if tw:
             list = tw.grid_slaves()
             for l in list:
                 l.destroy()
             tw.destroy()
-    """"""
-    def openNewWindow2(self):
-        if (self.newWindow2==None):
-            self.newWindow2 = Toplevel(root)
-            self.newWindow2.title("Run Model")
-            self.newWindow2.geometry("650x700")
-            self.newWindow2.protocol("WM_DELETE_WINDOW", exit)
 
-            self.newframe2 = Frame(self.newWindow2)
+    def askQuestionWindow(self):
+        if (self.askQuestionWindow==None):
+            self.askQuestionWindow = Toplevel(root)
+            self.askQuestionWindow.title("Run Model")
+            self.askQuestionWindow.geometry("650x700")
+            self.askQuestionWindow.protocol("WM_DELETE_WINDOW", exit)
+
+            self.newframe2 = Frame(self.askQuestionWindow)
             self.newframe2.place(x=10, y=20)
 
             self.t2 = Text(self.newframe2, width=60)
@@ -187,16 +187,16 @@ class myFrame(Frame):
 
             self.cost = Entry(self.newframe2,width=10)
             self.cost.pack()
-            
+
             self.checkBoxVar = IntVar(value=0)
             self.c = Checkbutton(self.newframe2, text = "Use current time", variable=self.checkBoxVar)
             self.c.pack()
-            
+
             """ print out comparison """
             self.printButton2 = Button(self.newframe2, text = "run!",
                                       command = lambda: self.runModel(self.agent,self.location1, self.location2, self.time, self.cost,self.t2))
             self.printButton2.pack()
-            self.exitButton2 = Button(self.newframe2, text="Exit", highlightbackground="#56B426", command=self.destroy2)
+            self.exitButton2 = Button(self.newframe2, text="Exit", highlightbackground="#56B426", command=self.askQuestionWindowDestroy)
             self.exitButton2.pack()
     def runModel(self,ai,loc1,loc2,time,cost,textbox):
         global Info
@@ -208,31 +208,34 @@ class myFrame(Frame):
             time = int(time.get())
             cost = int(cost.get())
             boolean = self.checkBoxVar.get()
-            print(boolean)
+
         except ValueError:
             loc1a,loc1b=-1,-2
             loc2a,loc2b=-1,-2
             time=-1
             cost=-1
             boolean=self.checkBoxVar.get()
-        print(Info.AgentsPos)
-        print(Info.BinaryMap)
-        print(Info.BinaryMap[0])
+        # print(Info.AgentsPos)
+        # print(Info.BinaryMap)
+        # print(Info.BinaryMap[0])
+        """use the current status if box is ticked"""
         if boolean:
             with open("test1.scen",'w') as out:
                 out.write("version 1\n")
                 for i in range(len(Info.AgentsPos)):
                     tmp=str(i)+'\t'+'debug-6-6.map'+'\t'+str(len(Info.BinaryMap[0]))+'\t'+str(len(Info.BinaryMap))+'\t'+str(Info.AgentsPos[i][min(Info.currentTime,len(Info.AgentsPos[i])-1)][1]-1)+'\t'+str(Info.AgentsPos[i][min(Info.currentTime,len(Info.AgentsPos[i])-1)][0]-1)+'\t'+str(Info.AgentsPos[i][-1][1]-1)+'\t'+str(Info.AgentsPos[i][-1][0]-1)+'\t'+str(8)+'\n'
                     out.write(tmp)
-        
+
             out.close()
+
+        """linux only"""
         # temp=init("../maps/debug-6-6.map.ecbs", "../scenarios/debug-6-6-2-2.scen", 2, [(0, ((-1, -2), (-1, -2)), -2, -100)])
         # textbox.insert("end",temp,'current')
-        
+
         textbox.see("end")
-    def destroy2(self):
-        tw = self.newWindow2
-        self.newWindow2 = None
+    def askQuestionWindowDestroy(self):
+        tw = self.askQuestionWindow
+        self.askQuestionWindow = None
         if tw:
             list = tw.grid_slaves()
             for l in list:
@@ -245,18 +248,18 @@ def repeater(root):
     while True:
         if backward and t>1:
             t-=1
-            Info.move_agents(t,the_canvas,the_frame,True)
+            Info.move_agents(t,the_canvas,top_frame,True)
             notMovingFlag=False
         elif notMovingFlag==True:
             pass
         elif forward and t>=1:
-            tt=Info.move_agents(t,the_canvas,the_frame,False)
+            tt=Info.move_agents(t,the_canvas,top_frame,False)
             t+=1
             if tt:
                 notMovingFlag=True
 
         elif continuePlay:
-            tt=Info.move_agents(t,the_canvas,the_frame,False)
+            tt=Info.move_agents(t,the_canvas,top_frame,False)
             t+=1
             if tt:
                 notMovingFlag=True
@@ -273,27 +276,27 @@ if __name__=="__main__":
     #in windows: python run.py test_2.txt debug-6-6.map.ecbs 2
     #in linux: python3 run.py test_2.txt debug-6-6.map.ecbs 2
     try:
-        addagen=sys.argv[1]
-        addmap=sys.argv[2]
+        addAgent=sys.argv[1]
+        addMap=sys.argv[2]
         numAgent=int(sys.argv[3])
     except IndexError:
-        # addagen,addmap,numAgent="test_25.txt","warehouse-10-20-10-2-1.map.ecbs",25
-        addagen,addmap,numAgent="test_2.txt","debug-6-6.map.ecbs",2
+        addAgent,addMap,numAgent="test_25.txt","warehouse-10-20-10-2-1.map.ecbs",25
+        #addAgent, addMap, numAgent= "test_2.txt", "debug-6-6.map.ecbs", 2
 
-    # addagen=init("../maps/debug-6-6.map.ecbs", "../scenarios/debug-6-6-2-2.scen", 2, [(0, ((-1, -2), (-1, -2)), -2, -100)])
+    # addAgent=init("../maps/debug-6-6.map.ecbs", "../scenarios/debug-6-6-2-2.scen", 2, [(0, ((-1, -2), (-1, -2)), -2, -100)])
     # with open("agentPath.txt","w") as text_file:
-    #     text_file.write(addagen)
+    #     text_file.write(addAgent)
     # text_file.close()
 
-    global Info,the_canvas,the_frame,continuePlay,t,backward,forward,newWindow,speedup
+    global Info,the_canvas,top_frame,continuePlay,t,backward,forward,newWindow,speedup
 
 
-    Info=info(addagen,addmap,numAgent)
+    Info=info(addAgent, addMap, numAgent)
 
     # Construct a simple root window
     root = Tk()
 
-    continuePlay,backward,forward,speedup = False,False,False,0.9
+    continuePlay,backward,forward,speedup = True,False,False,0.1
 
     root.title("Lazycbs Visualizer")
     # root.protocol("WM_DELETE_WINDOW",exit)
@@ -301,22 +304,20 @@ if __name__=="__main__":
     the_canvas= MyCanvas(root,width=1000,height=720,bg="#d1d1d1")
     the_canvas.pack(side=LEFT,expand=True,fill=BOTH)
 
-    the_frame2 = myFrame2(root)
-    the_frame2.pack(side=RIGHT,expand=True,fill=BOTH)
+    right_frame = righthandFrame(root)
+    right_frame.pack(side=RIGHT,expand=True,fill=BOTH)
 
-    the_frame = myFrame(root,the_canvas)
-    the_frame.pack(side=RIGHT,expand=True,fill=BOTH)
+    top_frame = topFrame(root,the_canvas)
+    top_frame.pack(side=RIGHT,expand=True,fill=BOTH)
 
     """cross platform"""
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    the_frame.config(width=screen_width, height=screen_height)
+    top_frame.config(width=screen_width, height=screen_height)
 
     Info.draw_map(the_canvas)
-    Info.draw_agents(the_canvas,the_frame,the_frame2)
+    Info.draw_agents(the_canvas,top_frame,right_frame)
 
     repeater(root)
 
     root.mainloop()
-
-    
