@@ -9,7 +9,8 @@ class MyCanvas(Canvas):
     def __init__(self,parent,**kwargs):
         Canvas.__init__(self,parent,**kwargs)
 
-class myFrame2(Frame):
+"""Right-hand component that handles buttons"""
+class rightFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.playButton = Button(self, text='Pause',width=10,height=3, bg='red', fg='black', command=self.play_visualizer)
@@ -55,8 +56,9 @@ class myFrame2(Frame):
         backward=False
         continuePlay=False
 
-"""text bar and menu to create new window and new frame inside"""
-class myFrame(Frame):
+
+"""Top frame component that handles timesteps, menu, user's queries"""
+class topFrame(Frame):
     def __init__(self, master,canvas):
         Frame.__init__(self, master)
 
@@ -266,20 +268,20 @@ def repeater(root):
     while True:
         if backward and t>1:
             t-=1
-            Info.move_agents(t,the_canvas,the_frame,True)
+            Info.move_agents(t,the_canvas,top_frame,True)
             notMovingFlag=False
         elif notMovingFlag==True:
             pass
         elif forward and t>=1:
-            tt=Info.move_agents(t,the_canvas,the_frame,False)
+            endFlag=Info.move_agents(t,the_canvas,top_frame,False)
             t+=1
-            if tt:
+            if endFlag:
                 notMovingFlag=True
 
         elif continuePlay:
-            tt=Info.move_agents(t,the_canvas,the_frame,False)
+            endFlag=Info.move_agents(t,the_canvas,top_frame,False)
             t+=1
-            if tt:
+            if endFlag:
                 notMovingFlag=True
 
 
@@ -306,7 +308,7 @@ if __name__=="__main__":
     #data=init(addmap, addagen, numAgent, [(0, ((-1, -2), (-1, -2)), -2, -100)])
     #addagen=data
     
-    global Info,the_canvas,the_frame,continuePlay,t,backward,forward,newWindow,speedup
+    global Info,the_canvas,top_frame,continuePlay,t,backward,forward,newWindow,speedup
 
 
     Info=info(addagen,addmap,numAgent)
@@ -322,19 +324,19 @@ if __name__=="__main__":
     the_canvas= MyCanvas(root,width=1630,height=720,bg="#d1d1d1")
     the_canvas.pack(side=LEFT,expand=True,fill=BOTH)
 
-    the_frame2 = myFrame2(root)
-    the_frame2.pack(side=RIGHT,expand=True,fill=BOTH)
+    right_frame = rightFrame(root)
+    right_frame.pack(side=RIGHT,expand=True,fill=BOTH)
 
-    the_frame = myFrame(root,the_canvas)
-    the_frame.pack(side=RIGHT,expand=True,fill=BOTH)
+    top_frame = topFrame(root,the_canvas)
+    top_frame.pack(side=RIGHT,expand=True,fill=BOTH)
 
     """cross platform"""
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    the_frame.config(width=screen_width, height=screen_height)
+    top_frame.config(width=screen_width, height=screen_height)
 
     Info.draw_map(the_canvas)
-    Info.draw_agents(the_canvas,the_frame,the_frame2)
+    Info.draw_agents(the_canvas,top_frame,right_frame)
 
     repeater(root)
 
