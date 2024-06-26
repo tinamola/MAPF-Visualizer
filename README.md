@@ -30,6 +30,7 @@ This is part of a university research project in developing an explanation gener
   - Inspect agent's position in its lifespan (More Functions->Agent Detail)
   - (Available only in linux) Ask questions(More Functions->Ask Questions)
   - some examples
+  - 
 |  		 Question    | Agent| loc1(optional)|  loc2(optional)   |  time(optional)  |   cost(optional)  |
 | :---             |    :----:   |     :----:   |    :----:   |    :----:   |   ---: |
 |     If there exist a new path for agent 1 to have a time cost of 7 ? 	     |1 |   |       |     |7 |
