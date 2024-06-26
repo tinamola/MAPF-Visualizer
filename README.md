@@ -7,13 +7,13 @@ This is part of a university research project in developing an explanation gener
 - Gange, G. (2018). geas. Bitbucket. https://bitbucket.org/gkgange/geas/src/master/
 
 ## Software Tools
-- [The backend PathFinder](https://bitbucket.org/gkgange/lazycbs/src/master/) is written by one of my project supervisors, Graeme Gange.
+- [The backend PathFinder](https://github.com/gkgange/lazycbs) is written by my project supervisor Graeme Gange.
 - We used [pybind11](https://pybind11.readthedocs.io/en/stable/) in order to connect the Lazy CBS code written in C++ to be called from the GUI's python code.
 - The MAPF interface is built using [python's tkinter GUI package](https://docs.python.org/3/library/tkinter.html).
 
 ## Datasets
 - The [MovingAI dataset](https://movingai.com/benchmarks/mapf/index.html) has a lot of scenarios and maps that can be passed in as arguments to the python GUI interface.
-- The map files from MovingAI have to be converted to .ecbs files using [this script](https://bitbucket.org/gkgange/lazycbs/src/master/scripts/map-conv.py).
+- The map files from MovingAI have to be converted to .ecbs files using [this script](https://github.com/AppleGamer22/FIT2082/blob/master/lazycbs/scripts/map-conv.py).
 
 ## Run the program
 - Install the [pybind11](https://pybind11.readthedocs.io/en/stable/installing.html) tool.
@@ -30,7 +30,6 @@ This is part of a university research project in developing an explanation gener
   - Inspect agent's position in its lifespan (More Functions->Agent Detail)
   - (Available only in linux) Ask questions(More Functions->Ask Questions)
   - some examples
--
 |  		 Question    | Agent| loc1(optional)|  loc2(optional)   |  time(optional)  |   cost(optional)  |
 | :---             |    :----:   |     :----:   |    :----:   |    :----:   |   ---: |
 |     If there exist a new path for agent 1 to have a time cost of 7 ? 	     |1 |   |       |     |7 |
