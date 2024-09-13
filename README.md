@@ -4,7 +4,6 @@ This is part of a university research project in developing an explanation gener
 ## Dependencies & Acknowledgements
 - Gange, G., Harabor, D. and Stuckey, P.J. (2021). Lazy CBS: Implicit Conflict-Based Search Using Lazy Clause Generation. In: Proceedings of the International Conference on Automated Planning and Scheduling. [online] International Conference on Automated Planning and Scheduling. pp.155–162. Available at: https://ojs.aaai.org/index.php/ICAPS/article/view/3471 [Accessed 6 Aug. 2021].
 - Li, J., Harabor, D., Stuckey, P.J., Ma, H., Gange, G. and Koenig, S. (2021). Pairwise symmetry reasoning for multi-agent path finding search. Artificial Intelligence, [online] 301, p.103574. Available at:https://doi.org/10.1016/j.artint.2021.103574 [Accessed 27 Aug. 2021].
-- Gange, G. (2018). geas. Bitbucket. https://bitbucket.org/gkgange/geas/src/master/
 
 ## Software Tools
 - [The backend PathFinder](https://github.com/gkgange/lazycbs) is written by my project supervisor Graeme Gange.
